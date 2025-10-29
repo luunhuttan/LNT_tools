@@ -6,6 +6,8 @@ from tqdm import tqdm
 from utils.search_google import search_profiles
 from utils.parser import parse_profile
 from utils.writer import save_to_csv, get_output_path
+import os
+import pandas as pd
 from utils.multi_api_key import APIManager
 
 
@@ -123,6 +125,19 @@ Use --overwrite flag to replace existing file instead.
     print()
     
     try:
+        # Prepare existing URLs to avoid wasting quota on duplicates across runs
+        output_path = get_output_path(args.industry)
+        existing_urls: set[str] = set()
+        try:
+            if os.path.exists(output_path):
+                df_existing = pd.read_csv(output_path, encoding='utf-8-sig')
+                if 'URL' in df_existing.columns:
+                    existing_urls = set(df_existing['URL'].dropna().astype(str).tolist())
+                    if existing_urls:
+                        print(f"[INFO] Loaded {len(existing_urls)} existing URLs to skip duplicates during search.")
+        except Exception as e:
+            print(f"[WARNING] Could not load existing URLs from CSV: {e}")
+
         # Step 1: Search for profiles using Google API
         print(f"[STEP 1/3] Searching profiles for '{args.industry}'...")
         api_manager_to_pass = api_manager if args.use_multi_keys else None
@@ -132,7 +147,8 @@ Use --overwrite flag to replace existing file instead.
             api_key=api_key,
             cx=(api_manager.get_current_cx() if using_multi_cx else args.cx),
             delay=args.delay,
-            api_manager=api_manager_to_pass
+            api_manager=api_manager_to_pass,
+            existing_urls=existing_urls
         )
         
         if not results:
@@ -159,7 +175,7 @@ Use --overwrite flag to replace existing file instead.
         
         # Step 3: Save to CSV
         print(f"[STEP 3/3] Saving to CSV...")
-        output_path = get_output_path(args.industry)
+        # output_path already resolved above
         append_mode = not args.overwrite  # Default to append (not overwrite)
         save_to_csv(profiles, output_path, append=append_mode)
         

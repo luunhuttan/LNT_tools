@@ -100,18 +100,43 @@ python main.py --industry "Data Engineer" --count 50 --api_key "AIzaSy..." --cx 
 - Thu thập nhanh hơn: 500-1000 profiles/ngày
 
 **Cách setup:**
-1. Tạo file `.api_keys_multi.txt` với format:
-   ```
-   API_KEY_1=your_key_1
-   API_KEY_2=your_key_2
-   ...
-   ```
 
-2. Enable Custom Search API cho tất cả keys trong Google Cloud Console
+1) Tạo file `.api_keys_multi.txt` tại thư mục gốc project theo 1 trong 2 chế độ sau:
 
-3. Chạy với flag `--use_multi_keys`:
+- Chế độ ghép cặp API Key ↔ CX (khuyến nghị, không cần truyền `--cx` khi chạy):
+  ```
+  API_KEY_1=your_api_key_1
+  CX_1=your_cx_1
+  API_KEY_2=your_api_key_2
+  CX_2=your_cx_2
+  # (tiếp tục API_KEY_3/CX_3 nếu có)
+  ```
+
+- Chế độ nhiều API Key dùng chung 1 CX (cần truyền `--cx` khi chạy):
+  ```
+  API_KEY_1=your_api_key_1
+  API_KEY_2=your_api_key_2
+  # (tiếp tục API_KEY_3 nếu có)
+  ```
+
+2) Enable Custom Search API cho tất cả API Keys trong Google Cloud Console.
+
+3) Cách chạy với multi-keys:
+
+- Nếu dùng GHÉP CẶP key↔CX trong file (không cần `--cx`):
+  ```bash
+  python main.py --industry "Data Engineer" --count 500 --use_multi_keys --delay 5
+  ```
+
+- Nếu dùng nhiều API Key CHUNG 1 CX (truyền `--cx`):
+  ```bash
+  python main.py --industry "Data Engineer" --count 500 --cx "YOUR_CX" --use_multi_keys --delay 5
+  ```
+
+4) (Tuỳ chọn) Tạo file mẫu nhanh:
    ```bash
-   python main.py --industry "Data Engineer" --count 500 --cx "YOUR_CX" --use_multi_keys --delay 5
+   python -c "from utils.multi_api_key import *; create_api_keys_file()"
+   # Điền API keys (và CX nếu muốn ghép cặp), sau đó lưu thành .api_keys_multi.txt
    ```
 
 **So sánh:**
@@ -335,3 +360,7 @@ Built with:
 
 **Happy collecting! 🎯**
 
+###
+code chạy kết hợp 2 API key với 2 CX
+python main.py --industry "Data Engineer" --count 500 --use_multi_keys --delay 5
+###

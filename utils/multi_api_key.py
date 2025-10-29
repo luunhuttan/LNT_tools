@@ -16,7 +16,8 @@ class APIManager:
         """
         self.api_keys = api_keys
         self.cxs = cxs if cxs and len(cxs) == len(api_keys) else None
-        self.current_index = 0
+        # Start at a random index to distribute usage across runs
+        self.current_index = random.randint(0, len(self.api_keys) - 1) if self.api_keys else 0
         self.key_usage = {key: 0 for key in api_keys}  # Track usage per key
         
     def get_current_key(self) -> str:
