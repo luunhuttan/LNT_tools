@@ -161,6 +161,33 @@ python main.py --industry "Data Engineer" --count 50 ...
 - Sử dụng từ khóa "Vietnam" hoặc "Viet Nam"
 - Nguồn: LinkedIn profiles công khai
 
+### ⚠️ Tại sao không có profile mới khi chạy nhiều lần?
+
+**Đây là hành vi ĐÚNG của hệ thống:**
+1. Google Search trả về kết quả theo **relevance** (độ liên quan), không random
+2. Mỗi lần chạy cùng industry → Google trả về **cùng các profiles**
+3. Tính năng lọc trùng tự động **skip profiles đã có** → Số lượng không tăng
+4. Đây là điều **tốt** - đảm bảo không bị trùng dữ liệu!
+
+**💡 Giải pháp để thu thập thêm profiles:**
+
+1. **Chạy với industry/từ khóa khác:**
+   ```bash
+   python main.py --industry "Big Data Engineer" --count 50 ...
+   python main.py --industry "Cloud Data Engineer" --count 50 ...
+   python main.py --industry "Senior Data Engineer" --count 50 ...
+   ```
+
+2. **Chạy với ngành nghề khác hoàn toàn:**
+   ```bash
+   python main.py --industry "Frontend Developer" --count 50 ...
+   python main.py --industry "Backend Developer" --count 50 ...
+   ```
+
+3. **Chấp nhận rằng đã thu thập đủ profiles cho ngành đó ở Việt Nam**
+   - Thị trường VN có hạn → không thể thu thập vô hạn
+   - 100 profiles cho "Data Engineer" ở VN là khá đủ
+
 ### Privacy & Ethics
 
 - ✅ Chỉ thu thập data công khai
