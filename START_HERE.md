@@ -61,7 +61,15 @@ dir data_collected\
 
 **Bắt đầu thu thập ngay:**
 
+### Option 1: Single API Key (100 queries/ngày)
 ```bash
 python main.py --industry "Data Engineer" --count 300 --api_key "AIzaSyA5tjOlmPZxbKXz9uDzvNqPO_Sco7Oq9-k" --cx "d4849e3a9180a4ea6"
 ```
+
+### Option 2: Multi-API Keys (500 queries/ngày - Khuyến nghị! ⚡)
+```bash
+python main.py --industry "Data Engineer" --count 500 --cx "d4849e3a9180a4ea6" --use_multi_keys --delay 5
+```
+
+**Setup multi-keys:** Xem hướng dẫn trong `HUONG_DAN.md` phần "Chế độ Multi-API Keys"
 

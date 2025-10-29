@@ -86,10 +86,42 @@ python main.py --industry "Data Engineer" --count 50 --api_key "AIzaSy..." --cx 
 |---------|----------|-------|
 | `--industry` | ✅ | Tên ngành nghề (VD: "Data Engineer", "Frontend Developer") |
 | `--count` | ❌ | Số lượng profiles (mặc định: 20) |
-| `--api_key` | ✅ | Google API Key |
+| `--api_key` | ⚠️ | Google API Key (bắt buộc nếu không dùng `--use_multi_keys`) |
 | `--cx` | ✅ | Search Engine ID (CX) |
 | `--delay` | ❌ | Delay giữa requests (mặc định: 2s) |
 | `--overwrite` | ❌ | Ghi đè file CSV cũ (mặc định: append và lọc trùng) |
+| `--use_multi_keys` | ❌ | Dùng nhiều API keys từ file `.api_keys_multi.txt` (khuyến nghị) |
+
+### 🔑 Chế độ Multi-API Keys (Khuyến nghị)
+
+**Ưu điểm:**
+- Tăng quota: 5 keys = 500 queries/ngày
+- Tự động rotate khi bị rate limit
+- Thu thập nhanh hơn: 500-1000 profiles/ngày
+
+**Cách setup:**
+1. Tạo file `.api_keys_multi.txt` với format:
+   ```
+   API_KEY_1=your_key_1
+   API_KEY_2=your_key_2
+   ...
+   ```
+
+2. Enable Custom Search API cho tất cả keys trong Google Cloud Console
+
+3. Chạy với flag `--use_multi_keys`:
+   ```bash
+   python main.py --industry "Data Engineer" --count 500 --cx "YOUR_CX" --use_multi_keys --delay 5
+   ```
+
+**So sánh:**
+
+| Mode | Single Key | Multi-keys (5 keys) |
+|------|------------|---------------------|
+| Quota/ngày | 100 queries | 500 queries |
+| Profiles/ngày | ~100-200 | ~500-1000 |
+| Rotation | ❌ | ✅ Auto |
+| Time to 2000 profiles | 10-15 ngày | 2-3 ngày |
 
 ---
 
