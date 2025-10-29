@@ -17,33 +17,22 @@ def generate_query_variations(industry):
     """
     variations = []
     
-    # More diverse keyword variations
+    # Diverse keyword variations (reduced to avoid rate limits)
     base_keywords = [
         industry,
-        f"{industry} at",
         f"Senior {industry}",
-        f"Junior {industry}",
-        f"{industry} manager",
         f"Lead {industry}",
-        f"{industry} specialist",
-        f"{industry} developer",
         f"Big Data {industry}",
         f"Cloud {industry}",
-        f"AWS {industry}",
-        f"Azure {industry}",
     ]
     
-    # More location variations - EXPAND TO GLOBAL
+    # Location variations - priotitize VN, then global
     locations = [
         "Vietnam",
         "Ho Chi Minh",
-        "Hanoi", 
-        "HCM City",
+        "Hanoi",
         "HCMC",
-        "Da Nang",
-        "Binh Duong",
-        "Can Tho",
-        "",  # No location - global search
+        "",  # Global search (no location)
     ]
     
     # Generate query combinations - prioritized by variation
