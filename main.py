@@ -116,7 +116,7 @@ Use --overwrite flag to replace existing file instead.
         results = search_profiles(
             industry=args.industry,
             count=args.count,
-            api_key=args.api_key,
+            api_key=api_key,
             cx=args.cx,
             delay=args.delay
         )
