@@ -56,8 +56,8 @@ Use --overwrite flag to replace existing file instead.
     parser.add_argument(
         '--cx',
         type=str,
-        required=True,
-        help='Google Custom Search Engine ID (CSE)'
+        required=False,
+        help='Google Custom Search Engine ID (CSE). Optional when CXs are provided in .api_keys_multi.txt'
     )
     
     parser.add_argument(
@@ -84,21 +84,33 @@ Use --overwrite flag to replace existing file instead.
         print("[ERROR] Delay must be non-negative.")
         sys.exit(1)
     
-    # Handle API key selection
+    # Handle API key and CX selection
+    using_multi_cx = False
     if args.use_multi_keys:
-        api_keys = APIManager.load_from_file()
+        api_keys, cxs = APIManager.load_pairs_from_file()
         if not api_keys:
             print("[ERROR] No API keys found in .api_keys_multi.txt")
             print("[INFO] Run 'python -c \"from utils.multi_api_key import *; create_api_keys_file()\"' to create template")
             sys.exit(1)
-        api_manager = APIManager(api_keys)
-        print(f"[INFO] Using {len(api_keys)} API keys for rotation")
+        # Use paired CXs only if fully aligned by length
+        if cxs and len(cxs) == len(api_keys):
+            using_multi_cx = True
+            api_manager = APIManager(api_keys, cxs)
+            print(f"[INFO] Using {len(api_keys)} API key/CX pairs for rotation")
+        else:
+            api_manager = APIManager(api_keys)
+            print(f"[INFO] Using {len(api_keys)} API keys for rotation (single CX mode)")
         api_key = api_manager.get_current_key()
     else:
         if not args.api_key:
             print("[ERROR] --api_key is required or use --use_multi_keys")
             sys.exit(1)
         api_key = args.api_key
+
+    # Validate CX presence when not using multi-CX
+    if not using_multi_cx and not args.cx:
+        print("[ERROR] --cx is required unless CX_n are provided for each API_KEY_n in .api_keys_multi.txt")
+        sys.exit(1)
     
     # Print startup information
     print("=" * 60)
@@ -118,7 +130,7 @@ Use --overwrite flag to replace existing file instead.
             industry=args.industry,
             count=args.count,
             api_key=api_key,
-            cx=args.cx,
+            cx=(api_manager.get_current_cx() if using_multi_cx else args.cx),
             delay=args.delay,
             api_manager=api_manager_to_pass
         )

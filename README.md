@@ -40,10 +40,11 @@ data_collected/Data Engineer/profiles.csv
 |-----------|----------|---------|-------------|
 | `--industry` | ✅ | - | Industry name (e.g., "Data Engineer") |
 | `--count` | ❌ | 20 | Number of profiles to collect |
-| `--api_key` | ✅ | - | Google Custom Search API key |
-| `--cx` | ✅ | - | Search Engine ID (CX) |
+| `--api_key` | ⚠️ | - | Google Custom Search API key (optional if using `--use_multi_keys`) |
+| `--cx` | ⚠️ | - | Search Engine ID (CX). Optional when `CX_n` pairs exist in `.api_keys_multi.txt` |
 | `--delay` | ❌ | 2.0 | Delay between requests (seconds) |
-| `--append` | ❌ | False | Append to existing CSV file |
+| `--overwrite` | ❌ | False | Overwrite existing CSV instead of appending (default is append) |
+| `--use_multi_keys` | ❌ | False | Use multi key/CX rotation from `.api_keys_multi.txt` |
 
 ---
 
@@ -71,7 +72,7 @@ CSV file contains:
 ## ⚠️ Limitations
 
 - Free tier: 100 queries/day
-- To collect more: Use `--append` flag daily
+- To collect more: Run multiple times (default appends new profiles). Use `--overwrite` to start fresh
 - Data from public LinkedIn profiles only
 
 ---
@@ -80,10 +81,24 @@ CSV file contains:
 
 ```bash
 # Collect Data Engineer profiles
-python main.py --industry "Data Engineer" --count 100 --api_key "..." --cx "..." --append
+python main.py --industry "Data Engineer" --count 100 --api_key "..." --cx "..."
 
 # Collect Frontend Developer profiles
 python main.py --industry "Frontend Developer" --count 50 --api_key "..." --cx "..."
+```
+
+### Multi-keys with paired CX (recommended)
+
+```bash
+python main.py --industry "Data Engineer" --count 200 --use_multi_keys --delay 3
+```
+
+Ensure `.api_keys_multi.txt` contains pairs:
+```
+API_KEY_1=your_key_1
+CX_1=your_cx_1
+API_KEY_2=your_key_2
+CX_2=your_cx_2
 ```
 
 ---

@@ -74,6 +74,7 @@ def search_profiles(industry, count, api_key, cx, delay=2, api_manager=None):
         List of profile dictionaries with title, snippet, and link
     """
     current_api_key = api_key
+    current_cx = cx
     
     try:
         service = build("customsearch", "v1", developerKey=current_api_key)
@@ -102,7 +103,7 @@ def search_profiles(industry, count, api_key, cx, delay=2, api_manager=None):
             
             res = service.cse().list(
                 q=query,
-                cx=cx,
+                cx=current_cx,
                 start=start,
                 num=max_results_per_query
             ).execute()
@@ -160,6 +161,15 @@ def search_profiles(industry, count, api_key, cx, delay=2, api_manager=None):
                     api_manager.rotate_key()
                     current_api_key = api_manager.get_current_key()
                     service = build("customsearch", "v1", developerKey=current_api_key)
+                    # If APIManager has paired CXs, rotate CX as well
+                    try:
+                        current_cx_candidate = getattr(api_manager, 'get_current_cx', None)
+                        if current_cx_candidate is not None:
+                            cx_value = api_manager.get_current_cx()
+                            if cx_value:
+                                current_cx = cx_value
+                    except Exception:
+                        pass
                     print("[INFO] Waiting 60 seconds before retry with new key...")
                     time.sleep(60)
                     continue
