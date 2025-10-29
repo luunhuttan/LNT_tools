@@ -47,20 +47,40 @@ pip install -r requirements.txt
 
 ## 🚀 Cách sử dụng
 
-### Lệnh cơ bản
+### ⚡ Cách chạy đơn giản
+
+**Lệnh chạy bình thường (tự động lưu vào file cũ):**
+```bash
+python main.py --industry "Data Engineer" --count 50 --api_key "YOUR_API_KEY" --cx "YOUR_CX"
+```
+
+**Lần 1:** Tạo file mới → `data_collected/Data Engineer/profiles.csv` (50 profiles)  
+**Lần 2:** Chạy lại cùng lệnh → Tự động thêm profiles mới vào file cũ (bỏ qua trùng lặp)  
+**Lần 3+:** Chạy thêm nhiều lần → Data tích lũy thêm, không bị trùng
+
+📌 **Quan trọng:** Mặc định chương trình tự động lưu vào file cũ, không cần thêm flag gì!
+
+**Chỉ dùng flag `--overwrite` khi muốn xóa file cũ và tạo lại:**
+```bash
+python main.py --industry "Data Engineer" --count 50 --api_key "..." --cx "..." --overwrite
+```
+
+---
+
+### 📋 Lệnh cơ bản
 
 ```bash
 python main.py --industry "TÊN_NGÀNH" --count SỐ_LƯỢNG --api_key "API_KEY" --cx "CX"
 ```
 
-### Ví dụ
+### 📝 Ví dụ nhanh
 
 ```bash
 # Thu thập 50 profiles Data Engineer tại Việt Nam
 python main.py --industry "Data Engineer" --count 50 --api_key "AIzaSy..." --cx "d4849e3a9180a4ea6"
 ```
 
-### Tham số
+### 📊 Tham số
 
 | Tham số | Bắt buộc | Mô tả |
 |---------|----------|-------|
@@ -139,43 +159,51 @@ python main.py --industry "Data Engineer" --count 50 ...
 
 ## 🔍 Ví dụ sử dụng
 
-### Thu thập Data Engineer
+### ✅ Ví dụ 1: Thu thập Data Engineer (chạy 1 lần)
 ```bash
-python main.py --industry "Data Engineer" --count 100 --api_key "YOUR_KEY" --cx "YOUR_CX"
+python main.py --industry "Data Engineer" --count 50 --api_key "YOUR_KEY" --cx "YOUR_CX"
 ```
+➡️ **Kết quả:** Tạo file mới với 50 profiles
 
-### Thu thập Frontend Developer
+### ✅ Ví dụ 2: Thu thập nhiều lần (data tích lũy)
+```bash
+# Lần 1: Tạo file mới
+python main.py --industry "Data Engineer" --count 50 --api_key "..." --cx "..."
+
+# Lần 2: Thêm vào file cũ (không cần flag gì!)
+python main.py --industry "Data Engineer" --count 50 --api_key "..." --cx "..."
+
+# Lần 3: Thêm vào file cũ
+python main.py --industry "Data Engineer" --count 50 --api_key "..." --cx "..."
+```
+➡️ **Kết quả:** File có ~120-140 profiles (tùy số trùng)
+
+💡 **Giải thích:** 
+- Mỗi lần chạy sẽ thêm profiles mới vào file cũ
+- Tự động lọc trùng dựa trên URL
+- Có thể chạy nhiều lần để thu thập nhiều data hơn
+
+### ✅ Ví dụ 3: Thu thập ngành khác
+
+**Frontend Developer:**
 ```bash
 python main.py --industry "Frontend Developer" --count 30 --api_key "YOUR_KEY" --cx "YOUR_CX"
 ```
 
-### Thu thập Marketing Manager
+**Marketing Manager:**
 ```bash
 python main.py --industry "Marketing Manager" --count 50 --api_key "YOUR_KEY" --cx "YOUR_CX"
 ```
 
-### Thu thập nhiều ngày (mặc định tự động append)
+### ⚠️ Ví dụ 4: Ghi đè file cũ (dùng khi muốn bắt đầu lại)
 
+**Dùng flag `--overwrite` để xóa file cũ và tạo lại:**
 ```bash
-# Ngày 1: Tạo file mới
-python main.py --industry "Data Engineer" --count 50 --api_key "..." --cx "..."
-
-# Ngày 2-10: Tự động append vào file cũ (không cần flag gì!)
-python main.py --industry "Data Engineer" --count 50 --api_key "..." --cx "..."
-```
-
-**🔒 Tính năng lọc trùng tự động:**
-- Mặc định: Tự động append vào file CSV có sẵn
-- Tự động lọc trùng profile dựa trên **URL**
-- Chỉ thêm profiles mới, bỏ qua trùng lặp
-- Chạy nhiều lần an toàn, không bị trùng dữ liệu
-
-### Ghi đè file (dùng flag --overwrite)
-
-```bash
-# Nếu muốn thay thế hoàn toàn file cũ
 python main.py --industry "Data Engineer" --count 50 --api_key "..." --cx "..." --overwrite
 ```
+➡️ **Kết quả:** Xóa file cũ, tạo file mới với 50 profiles
+
+⛔ **Lưu ý:** Chỉ dùng khi muốn xóa data cũ và bắt đầu lại từ đầu!
 
 ---
 
