@@ -138,9 +138,22 @@ python main.py --industry "Data Engineer" --count 50 ...
 
 ### Giới hạn API
 
-- **Free tier:** 100 queries/ngày
+📊 **Free Tier (mặc định):**
+- **100 queries/ngày**
 - **Mỗi query:** Tối đa 10 results
-- **Tổng:** ~100 profiles/ngày
+- **Tổng lý thuyết:** ~1000 profiles/ngày (100 queries × 10 results)
+- **Thời gian chạy:** ~200 giây (3-4 phút) cho 100 queries (với delay 2s)
+
+💡 **Thực tế sử dụng:**
+- **Thu thập 50 profiles:** ~10 queries, ~20 giây
+- **Thu thập 100 profiles:** ~10-20 queries, ~40 giây  
+- **Tối đa 1 ngày:** 100-150 profiles (an toàn, tránh hết quota)
+- **Nếu dùng hết quota:** ~1000 profiles/ngày (nhưng không nên dùng hết!)
+
+⚠️ **Lưu ý:** 
+- Nên chạy nhiều lần trong ngày với số lượng nhỏ (20-50 profiles/lần)
+- Chạy vài lần trong tuần để tích lũy data dần dần
+- Không nên chạy quá nhiều cùng lúc để tránh hết quota
 
 ### Phạm vi tìm kiếm
 
