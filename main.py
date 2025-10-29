@@ -6,6 +6,7 @@ from tqdm import tqdm
 from utils.search_google import search_profiles
 from utils.parser import parse_profile
 from utils.writer import save_to_csv, get_output_path
+from utils.multi_api_key import APIManager
 
 
 def main():
@@ -42,8 +43,14 @@ Use --overwrite flag to replace existing file instead.
     parser.add_argument(
         '--api_key',
         type=str,
-        required=True,
-        help='Google Custom Search API key'
+        default=None,
+        help='Google Custom Search API key (optional if using multi-keys mode)'
+    )
+    
+    parser.add_argument(
+        '--use_multi_keys',
+        action='store_true',
+        help='Use multiple API keys from .api_keys_multi.txt file'
     )
     
     parser.add_argument(
@@ -76,6 +83,22 @@ Use --overwrite flag to replace existing file instead.
     if args.delay < 0:
         print("[ERROR] Delay must be non-negative.")
         sys.exit(1)
+    
+    # Handle API key selection
+    if args.use_multi_keys:
+        api_keys = APIManager.load_from_file()
+        if not api_keys:
+            print("[ERROR] No API keys found in .api_keys_multi.txt")
+            print("[INFO] Run 'python -c \"from utils.multi_api_key import *; create_api_keys_file()\"' to create template")
+            sys.exit(1)
+        api_manager = APIManager(api_keys)
+        print(f"[INFO] Using {len(api_keys)} API keys for rotation")
+        api_key = api_manager.get_current_key()
+    else:
+        if not args.api_key:
+            print("[ERROR] --api_key is required or use --use_multi_keys")
+            sys.exit(1)
+        api_key = args.api_key
     
     # Print startup information
     print("=" * 60)

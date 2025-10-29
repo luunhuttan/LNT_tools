@@ -1,0 +1,9 @@
+# Multiple API Keys for profile collection
+# Each API key allows 100 queries/day
+# Total quota: 100 * number_of_keys queries/day
+
+# API_KEY_1=YOUR_API_KEY_HERE
+# API_KEY_2=YOUR_API_KEY_HERE
+# API_KEY_3=YOUR_API_KEY_HERE
+# API_KEY_4=YOUR_API_KEY_HERE
+# API_KEY_5=YOUR_API_KEY_HERE
