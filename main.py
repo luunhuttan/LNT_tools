@@ -18,6 +18,10 @@ def main():
 Examples:
   python main.py --industry "Data Engineer" --count 50 --api_key "AIza..." --cx "1a2b3c..."
   python main.py --industry "Frontend Developer" --count 30 --api_key "YOUR_KEY" --cx "YOUR_CX" --delay 3
+  python main.py --industry "Data Engineer" --count 50 --api_key "YOUR_KEY" --cx "YOUR_CX" --overwrite
+  
+Note: By default, new profiles are automatically merged with existing profiles.csv (duplicates filtered by URL).
+Use --overwrite flag to replace existing file instead.
         """
     )
     
@@ -57,9 +61,9 @@ Examples:
     )
     
     parser.add_argument(
-        '--append',
+        '--overwrite',
         action='store_true',
-        help='Append to existing CSV file instead of overwriting'
+        help='Overwrite existing CSV file instead of appending (default: append to avoid duplicates)'
     )
     
     args = parser.parse_args()
@@ -119,7 +123,8 @@ Examples:
         # Step 3: Save to CSV
         print(f"[STEP 3/3] Saving to CSV...")
         output_path = get_output_path(args.industry)
-        save_to_csv(profiles, output_path, append=args.append)
+        append_mode = not args.overwrite  # Default to append (not overwrite)
+        save_to_csv(profiles, output_path, append=append_mode)
         
         print()
         print("=" * 60)
