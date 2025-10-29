@@ -162,6 +162,9 @@ def search_profiles(industry, count, api_key, cx, delay=2):
             if e.resp.status == 429:
                 print("[WARNING] Rate limit exceeded. Waiting 60 seconds...")
                 time.sleep(60)
+                # Increase delay after hitting rate limit
+                delay = min(delay * 1.5, 10)  # Cap at maximum 10 seconds
+                print(f"[INFO] Increasing delay to {delay:.1f} seconds to avoid rate limits...")
                 continue
             else:
                 print(f"[ERROR] HTTP Error: {e}")
