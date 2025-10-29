@@ -69,7 +69,7 @@ python main.py --industry "Data Engineer" --count 50 --api_key "AIzaSy..." --cx 
 | `--api_key` | ✅ | Google API Key |
 | `--cx` | ✅ | Search Engine ID (CX) |
 | `--delay` | ❌ | Delay giữa requests (mặc định: 2s) |
-| `--append` | ❌ | Thêm vào file CSV có sẵn (không ghi đè) |
+| `--overwrite` | ❌ | Ghi đè file CSV cũ (mặc định: append và lọc trùng) |
 
 ---
 
@@ -97,6 +97,24 @@ data_collected/{Tên ngành}/profiles.csv
 ---
 
 ## ⚠️ Lưu ý
+
+### 🆕 Tính năng mới: Tự động lọc trùng Profile
+
+- ✅ **Mặc định:** Append mode - tự động thêm profiles mới vào file CSV cũ
+- ✅ **Tự động lọc trùng** dựa trên URL (không bị duplicate)
+- ✅ **An toàn:** Chạy nhiều lần sẽ tích lũy data, không gây trùng lặp
+- ✅ **Thông minh:** Tự động skip profiles đã có trong file
+
+**Ví dụ:**
+```bash
+# Lần 1: Thu thập 50 profiles
+python main.py --industry "Data Engineer" --count 50 ...
+
+# Lần 2: Thu thập thêm 50 profiles nữa
+# → Tự động merge vào file cũ, bỏ qua trùng lặp
+# → File có ~80-100 profiles (không phải 100 vì có 10-20 profiles trùng)
+python main.py --industry "Data Engineer" --count 50 ...
+```
 
 ### Giới hạn API
 
@@ -136,15 +154,28 @@ python main.py --industry "Frontend Developer" --count 30 --api_key "YOUR_KEY" -
 python main.py --industry "Marketing Manager" --count 50 --api_key "YOUR_KEY" --cx "YOUR_CX"
 ```
 
-### Thu thập nhiều ngày (append vào file có sẵn)
+### Thu thập nhiều ngày (mặc định tự động append)
+
 ```bash
 # Ngày 1: Tạo file mới
-python main.py --industry "Data Engineer" --count 100 --api_key "..." --cx "..."
+python main.py --industry "Data Engineer" --count 50 --api_key "..." --cx "..."
 
-# Ngày 2-10: Thêm vào file
-python main.py --industry "Data Engineer" --count 100 --api_key "..." --cx "..." --append
+# Ngày 2-10: Tự động append vào file cũ (không cần flag gì!)
+python main.py --industry "Data Engineer" --count 50 --api_key "..." --cx "..."
 ```
-**Lưu ý:** Flag `--append` tự động loại trùng profiles dựa trên URL. Có thể chạy nhiều ngày để thu thập nhiều profiles.
+
+**🔒 Tính năng lọc trùng tự động:**
+- Mặc định: Tự động append vào file CSV có sẵn
+- Tự động lọc trùng profile dựa trên **URL**
+- Chỉ thêm profiles mới, bỏ qua trùng lặp
+- Chạy nhiều lần an toàn, không bị trùng dữ liệu
+
+### Ghi đè file (dùng flag --overwrite)
+
+```bash
+# Nếu muốn thay thế hoàn toàn file cũ
+python main.py --industry "Data Engineer" --count 50 --api_key "..." --cx "..." --overwrite
+```
 
 ---
 
