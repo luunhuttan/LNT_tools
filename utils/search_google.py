@@ -17,7 +17,7 @@ def generate_query_variations(industry):
     """
     variations = []
     
-    # Base industry variations
+    # More diverse keyword variations
     base_keywords = [
         industry,
         f"{industry} at",
@@ -25,28 +25,46 @@ def generate_query_variations(industry):
         f"Junior {industry}",
         f"{industry} manager",
         f"Lead {industry}",
+        f"{industry} specialist",
+        f"{industry} developer",
+        f"Big Data {industry}",
+        f"Cloud {industry}",
+        f"AWS {industry}",
+        f"Azure {industry}",
     ]
     
-    # Location variations
+    # More location variations - EXPAND TO GLOBAL
     locations = [
         "Vietnam",
-        '"Viet Nam"',
         "Ho Chi Minh",
-        "Hanoi",
-        "Da Nang",
+        "Hanoi", 
+        "HCM City",
         "HCMC",
+        "Da Nang",
+        "Binh Duong",
+        "Can Tho",
+        "",  # No location - global search
     ]
     
-    # Generate query combinations
+    # Generate query combinations - prioritized by variation
     for keyword in base_keywords:
         for location in locations:
-            query = f'site:linkedin.com/in {keyword} {location}'
+            if location:
+                query = f'site:linkedin.com/in {keyword} {location}'
+            else:
+                query = f'site:linkedin.com/in {keyword}'
             variations.append(query)
     
-    # Add some without location to get broader results
-    for keyword in base_keywords:
-        query = f'site:linkedin.com/in {keyword} Vietnam'
-        variations.append(query)
+    # Add alternate search patterns
+    patterns = [
+        f'{industry} "Viet Nam"',
+        f'{industry} site:vn.linkedin.com',
+        f'{industry} LinkedIn',
+        f'{industry} profile',
+        f'"{industry}"',
+    ]
+    
+    variations.extend(patterns)
     
     return variations
 
