@@ -100,6 +100,9 @@ def search_profiles(industry, count, api_key, cx, delay=2):
     query_index = 0
     seen_urls = set()  # Track seen URLs to avoid duplicates within one run
     
+    # Switch queries frequently to get variety
+    queries_per_variation = 3  # Only get 3 pages per query variation
+    
     while len(results) < count and query_index < len(query_variations):
         try:
             # Use different query variations to find different profiles
@@ -140,10 +143,11 @@ def search_profiles(industry, count, api_key, cx, delay=2):
             
             print(f"[INFO] Found {len(results)}/{count} profiles (+{new_profiles_count} new from this query: {query[:50]}...)")
             
-            # Switch to next query variation if we're not getting new results
-            if new_profiles_count == 0 or start >= 100:
+            # Switch queries more frequently to get variety
+            if new_profiles_count == 0 or start > (queries_per_variation * max_results_per_query):
                 query_index += 1
                 start = 1  # Reset start for new query variation
+                print(f"[INFO] Switching to query variation {query_index}/{len(query_variations)}")
                 # Small delay before switching queries
                 if delay > 0:
                     time.sleep(delay / 2)
