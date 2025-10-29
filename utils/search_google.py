@@ -58,7 +58,7 @@ def generate_query_variations(industry):
     return variations
 
 
-def search_profiles(industry, count, api_key, cx, delay=2):
+def search_profiles(industry, count, api_key, cx, delay=2, api_manager=None):
     """
     Search for profiles using Google Custom Search API.
     
@@ -68,12 +68,15 @@ def search_profiles(industry, count, api_key, cx, delay=2):
         api_key: Google API key
         cx: Search engine ID
         delay: Delay between requests in seconds
+        api_manager: Optional APIManager for key rotation
         
     Returns:
         List of profile dictionaries with title, snippet, and link
     """
+    current_api_key = api_key
+    
     try:
-        service = build("customsearch", "v1", developerKey=api_key)
+        service = build("customsearch", "v1", developerKey=current_api_key)
     except Exception as e:
         print(f"[ERROR] Failed to build Google API service: {e}")
         return []
@@ -149,8 +152,21 @@ def search_profiles(industry, count, api_key, cx, delay=2):
             
         except HttpError as e:
             if e.resp.status == 429:
-                print("[WARNING] Rate limit exceeded. Waiting 60 seconds...")
-                time.sleep(60)
+                print("[WARNING] Rate limit exceeded for current API key.")
+                
+                # Try rotate to next key if api_manager provided
+                if api_manager and len(api_manager.api_keys) > 1:
+                    print("[INFO] Rotating to next API key...")
+                    api_manager.rotate_key()
+                    current_api_key = api_manager.get_current_key()
+                    service = build("customsearch", "v1", developerKey=current_api_key)
+                    print("[INFO] Waiting 60 seconds before retry with new key...")
+                    time.sleep(60)
+                    continue
+                else:
+                    print("[WARNING] Rate limit exceeded. Waiting 60 seconds...")
+                    time.sleep(60)
+                
                 # Increase delay after hitting rate limit
                 delay = min(delay * 1.5, 10)  # Cap at maximum 10 seconds
                 print(f"[INFO] Increasing delay to {delay:.1f} seconds to avoid rate limits...")

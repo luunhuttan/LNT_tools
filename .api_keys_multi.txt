@@ -1,0 +1,10 @@
+# Multiple API Keys for profile collection
+# Each API key allows 100 queries/day
+# Total quota: 500 queries/day (5 keys)
+
+API_KEY_1=AIzaSyA5tjOlmPZxbKXz9uDzvNqPO_Sco7Oq9-k
+API_KEY_2=AIzaSyDwGdCTCPx2N03PoBYCGBPoPdMuBLNXGhU
+API_KEY_3=AIzaSyDNZEJMi_XgOh7fRwzkRQYg_xZOF3vjVls
+API_KEY_4=AIzaSyDUbv_YD_WSKLQe8wVAuzQkSEBTbGv195A
+API_KEY_5=AIzaSyDOyq5_wK3U7i0-fYDY9fEm8cecuiBzcIU
+

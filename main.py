@@ -113,12 +113,14 @@ Use --overwrite flag to replace existing file instead.
     try:
         # Step 1: Search for profiles using Google API
         print(f"[STEP 1/3] Searching profiles for '{args.industry}'...")
+        api_manager_to_pass = api_manager if args.use_multi_keys else None
         results = search_profiles(
             industry=args.industry,
             count=args.count,
             api_key=api_key,
             cx=args.cx,
-            delay=args.delay
+            delay=args.delay,
+            api_manager=api_manager_to_pass
         )
         
         if not results:
