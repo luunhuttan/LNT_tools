@@ -6,3 +6,5 @@ API_KEY_1=AIzaSyA5tjOlmPZxbKXz9uDzvNqPO_Sco7Oq9-k
 CX_1=d4849e3a9180a4ea6
 API_KEY_2=AIzaSyCukIYyjdL6zwkVodUuJ5v-O2PhIk-1drk
 CX_2=950fb1765899f4b16
+API_KEY_3=AIzaSyAq1mdofCIkZwAKU_CviYoPlfccV4Ugr_U
+CX_3=b72eb1ebca10f48be

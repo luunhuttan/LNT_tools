@@ -108,11 +108,16 @@ class APIManager:
                             continue
 
             # Assemble lists in ascending index order
-            if not key_by_index:
-                return [], []
+            print(f"[DEBUG] key_by_index: {key_by_index}")
+            print(f"[DEBUG] cx_by_index: {cx_by_index}")
             indices = sorted(key_by_index.keys())
+            print(f"[DEBUG] indices: {indices}")
             api_keys = [key_by_index[i] for i in indices]
-            cxs = [cx_by_index[i] for i in indices if i in cx_by_index]
+            cxs = [cx_by_index[i] if i in cx_by_index else None for i in indices]
+            # Log nếu thiếu CX ở đâu đó
+            if None in cxs:
+                missing = [i for i, v in zip(indices, cxs) if v is None]
+                print(f"[WARNING] Missing CX for index: {missing}")
             return api_keys, cxs
         except FileNotFoundError:
             print(f"[WARNING] File {filepath} not found. Using single key mode.")
