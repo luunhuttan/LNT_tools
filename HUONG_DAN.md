@@ -360,7 +360,86 @@ Built with:
 
 **Happy collecting! 🎯**
 
-###
-code chạy kết hợp 2 API key với 2 CX
-python main.py --industry "Data Engineer" --count 500 --use_multi_keys --delay 5
-###
+## 🧰 Git - Cách sử dụng cơ bản
+
+### 1) Clone dự án về máy
+```bash
+# HTTPS
+git clone https://github.com/<username>/<repo>.git
+
+# Hoặc SSH
+git clone git@github.com:<username>/<repo>.git
+```
+
+### 2) Cấu hình Git (1 lần trên mỗi máy)
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+```
+
+### 3) Kiểm tra thay đổi, thêm file và commit
+```bash
+git status
+git add -A
+git commit -m "your commit message"
+```
+
+### 4) Push lần đầu (thiết lập upstream)
+```bash
+git push --set-upstream origin main
+```
+
+### 5) Push các lần sau
+```bash
+git push
+```
+
+### 6) Kéo cập nhật mới nhất về máy
+```bash
+git pull
+```
+
+### 7) Làm việc với branch
+```bash
+# Tạo và chuyển sang nhánh mới
+git checkout -b feature/my-change
+
+# Push nhánh mới lần đầu
+git push --set-upstream origin feature/my-change
+
+# Sau đó chỉ cần
+git push
+```
+
+### 8) Lưu tạm thay đổi (tuỳ chọn)
+```bash
+git stash           # lưu tạm thời
+git pull            # cập nhật code mới
+git stash pop       # lấy lại thay đổi
+```
+
+Ghi chú:
+- Lần đầu push qua HTTPS, Git có thể yêu cầu GitHub Personal Access Token (PAT) thay cho mật khẩu.
+- Nếu dùng SSH, hãy cấu hình SSH key trước trong tài khoản GitHub.
+
+### 9) Trình tự chuẩn để push code (nhanh gọn)
+```bash
+# 1) Kiểm tra thay đổi
+git status
+
+# 2) Chọn file để đẩy lên (stage)
+git add -A
+# 2.1) Nếu add toàn bộ file thì sử dụng
+git add .
+
+# 3) Tạo commit
+git commit -m "mo ta ngan gon, ro rang ve thay doi"
+
+# 4) Push
+# Lần đầu nhánh hiện tại:
+git push --set-upstream origin main
+# Các lần sau:
+git push
+```
+
+Nếu lỡ gõ nhầm thứ tự (ví dụ: push → add → commit): chỉ cần tiếp tục `git add -A && git commit -m "..." && git push`.
