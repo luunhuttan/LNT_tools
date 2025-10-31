@@ -125,7 +125,7 @@ python main.py --industry "Data Engineer" --count 50 --api_key "AIzaSy..." --cx 
 
 - Nếu dùng GHÉP CẶP key↔CX trong file (không cần `--cx`):
   ```bash
-  python main.py --industry "Data Engineer" --count 500 --use_multi_keys --delay 5
+  python main.py --industry "Data Engineer" --count 200 --use_multi_keys --delay 5
   ```
 
 - Nếu dùng nhiều API Key CHUNG 1 CX (truyền `--cx`):
