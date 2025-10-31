@@ -219,6 +219,29 @@ def search_profiles(industry, count, api_key, cx, delay=2, api_manager=None, exi
                 delay = min(delay * 1.5, 10)  # Cap at maximum 10 seconds
                 print(f"[INFO] Increasing delay to {delay:.1f} seconds to avoid rate limits...")
                 continue
+            # Handle invalid CX (404 requested entity not found)
+            elif status == 404 and any(s in content_text.lower() for s in [
+                'requested entity was not found', 'notfound', 'cx', 'search engine id'
+            ]):
+                print("[WARNING] CX appears invalid or not accessible (404 Not Found).")
+                # Try rotate to next pair if available
+                if api_manager and len(api_manager.api_keys) > 1:
+                    print("[INFO] Rotating to next API key/CX pair due to CX 404...")
+                    api_manager.rotate_key()
+                    current_api_key = api_manager.get_current_key()
+                    service = build("customsearch", "v1", developerKey=current_api_key)
+                    try:
+                        cx_value = api_manager.get_current_cx()
+                        if cx_value:
+                            current_cx = cx_value
+                    except Exception:
+                        pass
+                    # Small wait before retry
+                    time.sleep(5)
+                    continue
+                else:
+                    print("[ERROR] No alternate CX available. Please verify your CX in Programmable Search Engine and that Custom Search API is enabled for this key.")
+                    break
             else:
                 print(f"[ERROR] HTTP Error: {e}")
                 break

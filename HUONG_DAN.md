@@ -337,6 +337,14 @@ D:\tools\
 ### Lỗi: "API key invalid"
 - **Giải pháp:** Kiểm tra lại API Key và đảm bảo Custom Search API đã enabled
 
+### Lỗi: 404 "Requested entity was not found" (CX)
+- **Nguyên nhân:** `CX` (Search Engine ID) không tồn tại/đã xóa/không public, hoặc key hiện tại không có quyền dùng CX đó.
+- **Giải pháp:**
+  1) Mở `https://programmablesearchengine.google.com/` và kiểm tra CX còn hoạt động, Allow public search.
+  2) Đảm bảo đã bật API "Custom Search API" trong Google Cloud cho API Key tương ứng.
+  3) Nếu dùng multi-keys ghép cặp, chắc chắn mỗi `API_KEY_n` đi kèm đúng `CX_n`.
+  4) Tool đã tự động rotate sang cặp kế tiếp khi gặp 404; nếu hết cặp, hãy sửa lại CX/Key.
+
 ---
 
 ## 📞 Support
