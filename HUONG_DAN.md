@@ -443,3 +443,44 @@ git push
 ```
 
 Nếu lỡ gõ nhầm thứ tự (ví dụ: push → add → commit): chỉ cần tiếp tục `git add -A && git commit -m "..." && git push`.
+
+### 10) Cập nhật code mới nhất khi có người vừa đẩy code
+
+Trường hợp đơn giản (không sửa gì cục bộ):
+```bash
+git pull
+```
+
+Nếu bạn đang có thay đổi dở dang (chưa commit):
+```bash
+# Cách 1: Commit tạm thời rồi pull
+git add -A
+git commit -m "wip: luu tam thay doi"
+git pull --rebase      # rebase để giữ lịch sử gọn
+
+# Cách 2: Dùng stash nếu không muốn commit
+git stash              # lưu tạm
+git pull               # lấy code mới
+git stash pop          # khôi phục thay đổi
+```
+
+Khi có xung đột (merge conflict):
+```bash
+# 1) Mở file bị conflict, chỉnh sửa cho đúng
+# 2) Đánh dấu đã giải quyết conflict
+git add .
+
+# Nếu đang rebase
+git rebase --continue
+
+# Nếu đang merge (do pull không dùng --rebase)
+git commit
+```
+
+Mẹo nâng cao (khi muốn kiểm soát kỹ hơn):
+```bash
+git fetch              # tải về nhưng chưa gộp
+git status
+git log --oneline --graph --decorate --all
+git rebase origin/main # hoặc: git merge origin/main
+```
