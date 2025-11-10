@@ -16,7 +16,8 @@ class APIManager:
         """
         self.api_keys = api_keys
         self.cxs = cxs if cxs and len(cxs) == len(api_keys) else None
-        self.current_index = 0
+        # Start at a random index to distribute usage across runs
+        self.current_index = random.randint(0, len(self.api_keys) - 1) if self.api_keys else 0
         self.key_usage = {key: 0 for key in api_keys}  # Track usage per key
         self.daily_quota = 100  # Google Custom Search API daily quota per key
         
@@ -192,14 +193,22 @@ class APIManager:
                     except ValueError:
                         continue
 
+<<<<<<< HEAD
             # Validate and assemble lists
             if not key_by_index:
                 print("[WARNING] No valid API keys found in file")
                 return [], []
                 
             # Sort indices for consistent ordering
+=======
+            # Assemble lists in ascending index order
+            print(f"[DEBUG] key_by_index: {key_by_index}")
+            print(f"[DEBUG] cx_by_index: {cx_by_index}")
+>>>>>>> 04cfcfb986b4578528d7e239e1358d72058e6c6b
             indices = sorted(key_by_index.keys())
+            print(f"[DEBUG] indices: {indices}")
             api_keys = [key_by_index[i] for i in indices]
+<<<<<<< HEAD
             
             # Only include CXs if we have them for all keys
             cxs = []
@@ -210,6 +219,13 @@ class APIManager:
                     print("[WARNING] Incomplete CX pairs found - some keys missing CX values")
                     cxs = []
                 
+=======
+            cxs = [cx_by_index[i] if i in cx_by_index else None for i in indices]
+            # Log nếu thiếu CX ở đâu đó
+            if None in cxs:
+                missing = [i for i, v in zip(indices, cxs) if v is None]
+                print(f"[WARNING] Missing CX for index: {missing}")
+>>>>>>> 04cfcfb986b4578528d7e239e1358d72058e6c6b
             return api_keys, cxs
             
         except FileNotFoundError:

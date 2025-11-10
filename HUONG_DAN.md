@@ -100,18 +100,43 @@ python main.py --industry "Data Engineer" --count 50 --api_key "AIzaSy..." --cx 
 - Thu thập nhanh hơn: 500-1000 profiles/ngày
 
 **Cách setup:**
-1. Tạo file `.api_keys_multi.txt` với format:
-   ```
-   API_KEY_1=your_key_1
-   API_KEY_2=your_key_2
-   ...
-   ```
 
-2. Enable Custom Search API cho tất cả keys trong Google Cloud Console
+1) Tạo file `.api_keys_multi.txt` tại thư mục gốc project theo 1 trong 2 chế độ sau:
 
-3. Chạy với flag `--use_multi_keys`:
+- Chế độ ghép cặp API Key ↔ CX (khuyến nghị, không cần truyền `--cx` khi chạy):
+  ```
+  API_KEY_1=your_api_key_1
+  CX_1=your_cx_1
+  API_KEY_2=your_api_key_2
+  CX_2=your_cx_2
+  # (tiếp tục API_KEY_3/CX_3 nếu có)
+  ```
+
+- Chế độ nhiều API Key dùng chung 1 CX (cần truyền `--cx` khi chạy):
+  ```
+  API_KEY_1=your_api_key_1
+  API_KEY_2=your_api_key_2
+  # (tiếp tục API_KEY_3 nếu có)
+  ```
+
+2) Enable Custom Search API cho tất cả API Keys trong Google Cloud Console.
+
+3) Cách chạy với multi-keys:
+
+- Nếu dùng GHÉP CẶP key↔CX trong file (không cần `--cx`):
+  ```bash
+  python main.py --industry "Data Engineer" --count 200 --use_multi_keys --delay 5
+  ```
+
+- Nếu dùng nhiều API Key CHUNG 1 CX (truyền `--cx`):
+  ```bash
+  python main.py --industry "Data Engineer" --count 500 --cx "YOUR_CX" --use_multi_keys --delay 5
+  ```
+
+4) (Tuỳ chọn) Tạo file mẫu nhanh:
    ```bash
-   python main.py --industry "Data Engineer" --count 500 --cx "YOUR_CX" --use_multi_keys --delay 5
+   python -c "from utils.multi_api_key import *; create_api_keys_file()"
+   # Điền API keys (và CX nếu muốn ghép cặp), sau đó lưu thành .api_keys_multi.txt
    ```
 
 **So sánh:**
@@ -312,6 +337,14 @@ D:\tools\
 ### Lỗi: "API key invalid"
 - **Giải pháp:** Kiểm tra lại API Key và đảm bảo Custom Search API đã enabled
 
+### Lỗi: 404 "Requested entity was not found" (CX)
+- **Nguyên nhân:** `CX` (Search Engine ID) không tồn tại/đã xóa/không public, hoặc key hiện tại không có quyền dùng CX đó.
+- **Giải pháp:**
+  1) Mở `https://programmablesearchengine.google.com/` và kiểm tra CX còn hoạt động, Allow public search.
+  2) Đảm bảo đã bật API "Custom Search API" trong Google Cloud cho API Key tương ứng.
+  3) Nếu dùng multi-keys ghép cặp, chắc chắn mỗi `API_KEY_n` đi kèm đúng `CX_n`.
+  4) Tool đã tự động rotate sang cặp kế tiếp khi gặp 404; nếu hết cặp, hãy sửa lại CX/Key.
+
 ---
 
 ## 📞 Support
@@ -335,3 +368,127 @@ Built with:
 
 **Happy collecting! 🎯**
 
+## 🧰 Git - Cách sử dụng cơ bản
+
+### 1) Clone dự án về máy
+```bash
+# HTTPS
+git clone https://github.com/<username>/<repo>.git
+
+# Hoặc SSH
+git clone git@github.com:<username>/<repo>.git
+```
+
+### 2) Cấu hình Git (1 lần trên mỗi máy)
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+```
+
+### 3) Kiểm tra thay đổi, thêm file và commit
+```bash
+git status
+git add -A
+git commit -m "your commit message"
+```
+
+### 4) Push lần đầu (thiết lập upstream)
+```bash
+git push --set-upstream origin main
+```
+
+### 5) Push các lần sau
+```bash
+git push
+```
+
+### 6) Kéo cập nhật mới nhất về máy
+```bash
+git pull
+```
+
+### 7) Làm việc với branch
+```bash
+# Tạo và chuyển sang nhánh mới
+git checkout -b feature/my-change
+
+# Push nhánh mới lần đầu
+git push --set-upstream origin feature/my-change
+
+# Sau đó chỉ cần
+git push
+```
+
+### 8) Lưu tạm thay đổi (tuỳ chọn)
+```bash
+git stash           # lưu tạm thời
+git pull            # cập nhật code mới
+git stash pop       # lấy lại thay đổi
+```
+
+Ghi chú:
+- Lần đầu push qua HTTPS, Git có thể yêu cầu GitHub Personal Access Token (PAT) thay cho mật khẩu.
+- Nếu dùng SSH, hãy cấu hình SSH key trước trong tài khoản GitHub.
+
+### 9) Trình tự chuẩn để push code (nhanh gọn)
+```bash
+# 1) Kiểm tra thay đổi
+git status
+
+# 2) Chọn file để đẩy lên (stage)
+git add -A
+# 2.1) Nếu add toàn bộ file thì sử dụng
+git add .
+
+# 3) Tạo commit
+git commit -m "mo ta ngan gon, ro rang ve thay doi"
+
+# 4) Push
+# Lần đầu nhánh hiện tại:
+git push --set-upstream origin main
+# Các lần sau:
+git push
+```
+
+Nếu lỡ gõ nhầm thứ tự (ví dụ: push → add → commit): chỉ cần tiếp tục `git add -A && git commit -m "..." && git push`.
+
+### 10) Cập nhật code mới nhất khi có người vừa đẩy code
+
+Trường hợp đơn giản (không sửa gì cục bộ):
+```bash
+git pull
+```
+
+Nếu bạn đang có thay đổi dở dang (chưa commit):
+```bash
+# Cách 1: Commit tạm thời rồi pull
+git add -A
+git commit -m "wip: luu tam thay doi"
+git pull --rebase      # rebase để giữ lịch sử gọn
+
+# Cách 2: Dùng stash nếu không muốn commit
+git stash              # lưu tạm
+git pull               # lấy code mới
+git stash pop          # khôi phục thay đổi
+```
+
+Khi có xung đột (merge conflict):
+```bash
+# 1) Mở file bị conflict, chỉnh sửa cho đúng
+# 2) Đánh dấu đã giải quyết conflict
+git add .
+
+# Nếu đang rebase
+git rebase --continue
+
+# Nếu đang merge (do pull không dùng --rebase)
+git commit
+```
+
+Mẹo nâng cao (khi muốn kiểm soát kỹ hơn):
+```bash
+git fetch              # tải về nhưng chưa gộp
+git status
+git log --oneline --graph --decorate --all
+git rebase origin/main # hoặc: git merge origin/main
+```

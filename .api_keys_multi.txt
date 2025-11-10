@@ -2,9 +2,18 @@
 # Each API key allows 100 queries/day
 # Total quota: 100 * number_of_keys queries/day
 
+<<<<<<< HEAD
 API_KEY_2=AIzaSyAQqFrJg9H7VXWAdFoWYQNktzE_iL5S1PE
 CX_2=00c7959ae08ef41f0
 API_KEY_1=AIzaSyCURd3zO2Z_SQ0vj-u1bNthplIt5DJLfsY
 CX_1=27aeecac229384686
 API_KEY_3=AIzaSyBBI8ZBCgIBANSdclTaHaJgfI2X-Tx4E5A
 CX_3=e1ecd0322ba4e4777
+=======
+API_KEY_1=AIzaSyA5tjOlmPZxbKXz9uDzvNqPO_Sco7Oq9-k
+CX_1=d4849e3a9180a4ea6
+API_KEY_2=AIzaSyCukIYyjdL6zwkVodUuJ5v-O2PhIk-1drk
+CX_2=950fb1765899f4b16
+API_KEY_3=AIzaSyAq1mdofCIkZwAKU_CviYoPlfccV4Ugr_U
+CX_3=b72eb1ebca10f48be
+>>>>>>> 04cfcfb986b4578528d7e239e1358d72058e6c6b
