@@ -95,12 +95,50 @@ def save_to_csv(data: List[Dict[str, str]], filepath: str, append=False):
             print(f"[INFO] Overwriting existing file: {filepath}")
         df_to_save = df_new
     
-    # Save with UTF-8-BOM encoding for Excel compatibility
-    df_to_save.to_csv(filepath, index=False, encoding='utf-8-sig')
+    # Try to save with multiple attempts and fallback options
+    max_attempts = 3
+    attempts = 0
+    base_filepath = filepath
     
-    # Print final summary
-    print(f"\n✅ Saved {len(df_to_save)} total profiles.")
-    print(f"📁 File: {filepath}")
+    while attempts < max_attempts:
+        try:
+            # Try to save with UTF-8-BOM encoding for Excel compatibility
+            df_to_save.to_csv(filepath, index=False, encoding='utf-8-sig')
+            
+            # Print final summary
+            print(f"\n✅ Saved {len(df_to_save)} total profiles.")
+            print(f"📁 File: {filepath}")
+            return  # Successfully saved
+            
+        except PermissionError as e:
+            attempts += 1
+            if attempts < max_attempts:
+                # Try with a different filename
+                filepath = f"{os.path.splitext(base_filepath)[0]}_{attempts}.csv"
+                print(f"\n[WARNING] Permission denied. Trying alternate filename: {filepath}")
+                continue
+            else:
+                # If all attempts failed, try saving to temp directory
+                import tempfile
+                temp_dir = tempfile.gettempdir()
+                filename = os.path.basename(base_filepath)
+                temp_filepath = os.path.join(temp_dir, filename)
+                try:
+                    df_to_save.to_csv(temp_filepath, index=False, encoding='utf-8-sig')
+                    print(f"\n⚠️ Could not save to original location. File saved to: {temp_filepath}")
+                    print("Please make sure the original file is not open in another program")
+                    print("and you have write permissions to the directory.")
+                    return
+                except Exception as temp_err:
+                    print(f"\n❌ Failed to save file: {str(e)}")
+                    print("Please ensure:")
+                    print("1. The file is not open in another program (like Excel)")
+                    print("2. You have write permissions to the directory")
+                    print("3. The file is not marked as read-only")
+                    raise
+        except Exception as e:
+            print(f"\n❌ Failed to save file: {str(e)}")
+            raise
 
 
 def get_output_path(industry: str) -> str:
